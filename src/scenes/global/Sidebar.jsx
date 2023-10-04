@@ -46,10 +46,12 @@ const Sidebar = () => {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
+          padding: "5px 20px 5px 10px !important",
+          
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
+          backgroundColor: "#14141455 !important",
         },
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
@@ -74,7 +76,9 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h4" color={colors.grey[100]}>GEMSERP</Typography>
+                <Typography variant="h4" color={colors.grey[100]}>
+                  GEMSERP
+                </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
@@ -115,29 +119,378 @@ const Sidebar = () => {
 
           {/* Menu Items */}
 
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="AUTHORIZATION" icon={<PersonAddOutlinedIcon />}>
-              <Item
+              <SubMenu 
                 title="Dashboard"
                 to="/"
-                icon={<HomeOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              />
+              >
+                <SubMenu title="academic data" icon={<PersonAddOutlinedIcon />}>
+                  <Item
+                    title="Master"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  ></Item>
+                </SubMenu>
+              </SubMenu>
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+
+
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="ACADEMIC" icon={<SchoolOutlinedIcon />}>
-              <Item
-                title="Dashboard"
-                to="/"
-                icon={<HomeOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+              <SubMenu title="Master">
+                <SubMenu title="Academic Data">
+                  <Item
+                    title="Academic Session"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Payment Type"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Concession"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Medium"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                    
+                  />
+                  <Item
+                    title="Section"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Certificate"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Occupation"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                <SubMenu title="Common Master">
+                  <Item
+                    title="Caste Category"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subcaste"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Title"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Gender"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Religion"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Marital Status"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Handicap"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Blood Group"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="University And Board"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Nationality"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Mother Tongue"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                <SubMenu title="Bank Details">
+                  <Item
+                    title="Bank"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Bank Account"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+              </SubMenu>
+
+              <SubMenu title="Pre Admission">
+                <SubMenu title="Course">
+                  <Item
+                    title="Year"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Semester"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Degree"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Faculty"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Fee Pattern"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Course Pattern"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Cashbook"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Feehead"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Feehead Grouping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Feehead Account Mapping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Cashbook Rights"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Copy Cashbook Rights"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Course Certificate"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="User Mapping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                <SubMenu title="Fees">
+                  <Item
+                    title="Basic Course"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Course Creation"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Course Updation"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Course Section"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Standard Fee"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Copy Standard Fee"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                <SubMenu title="Other Fees Defination">
+                  <Item
+                    title="General Fine"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Installment Fees"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Studentwise Installment Fees"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Certificate Fee"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Studentwise Installment clear"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                <SubMenu title="Subject">
+                  <Item
+                    title="Subject Type"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Part"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Defination"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Grouping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Fee"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Mapping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Mapping Jr"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Subject Group Mapping"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Regular/Backlog Exam Registration Fee Config"
+                    to="/"
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+              </SubMenu>
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+
+
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu
               title="ATTENDANCE"
               icon={<AssignmentTurnedInOutlinedIcon />}
@@ -151,7 +504,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="EXAMINATION" icon={<LibraryBooksOutlinedIcon />}>
               <Item
                 title="Dashboard"
@@ -162,7 +515,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="PAYROLL" icon={<PriceChangeOutlinedIcon />}>
               <Item
                 title="Dashboard"
@@ -173,7 +526,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu
               title="ESTABLISHMENT"
               icon={<AccountBalanceOutlinedIcon />}
@@ -187,7 +540,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="ITLE" icon={<SchoolOutlinedIcon />}>
               <Item
                 title="Dashboard"
@@ -198,7 +551,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="PASSWORD RESET" icon={<KeyOutlinedIcon />}>
               <Item
                 title="Dashboard"
@@ -209,7 +562,7 @@ const Sidebar = () => {
               />
             </SubMenu>
           </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1%"}>
             <SubMenu title="LIBRARY" icon={<LibraryBooksOutlinedIcon />}>
               <Item
                 title="Dashboard"
