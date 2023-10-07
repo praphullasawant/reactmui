@@ -1,8 +1,7 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
-import ProgressCircle from "../../components/ProgressCircle";
 import BoyOutlinedIcon from '@mui/icons-material/BoyOutlined';
 
 const Dashboard = () => {

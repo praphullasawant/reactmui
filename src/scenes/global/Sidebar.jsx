@@ -51,7 +51,7 @@ const Sidebar = () => {
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
-          backgroundColor: "#14141455 !important",
+          backgroundColor: "#453953 !important",
         },
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
@@ -259,7 +259,7 @@ const Sidebar = () => {
                 <SubMenu title="Bank Details">
                   <Item
                     title="Bank"
-                    to="/"
+                    to="/bank"
                     selected={selected}
                     setSelected={setSelected}
                   />
@@ -312,7 +312,7 @@ const Sidebar = () => {
                   />
                   <Item
                     title="Cashbook"
-                    to="/"
+                    to="/cashbook"
                     selected={selected}
                     setSelected={setSelected}
                   />
@@ -486,6 +486,9 @@ const Sidebar = () => {
                   />
                 </SubMenu>
               </SubMenu>
+              
+
+              
             </SubMenu>
           </Box>
 
