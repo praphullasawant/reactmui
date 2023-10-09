@@ -10,7 +10,7 @@ import {
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../../theme";
 import Header from "../../../../components/Header";
 import Button from "@mui/material/Button";
@@ -24,9 +24,13 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
-import { retriveAllBanks } from "../../../../api/BankApiService";
+import {
+  retriveAllBanks,
+  retrieveBankApi,
+  updateBankApi,
+  createBankApi,
+} from "../../../../api/BankApiService";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const initialValues = {
   bankCode: "",
@@ -49,7 +53,7 @@ const Bank = () => {
 
   const [banks, setBanks] = useState([]);
 
-  const navigate = useNavigate()
+  const [selectedBank, setSelectedBank] = useState([]);
 
   useEffect(() => refreshBanks(), []);
 
@@ -59,13 +63,57 @@ const Bank = () => {
       .catch((error) => console.log(error));
   }
 
-  function updateBank(id) {
-    console.log("clicked " + id);
+  useEffect(() => {
+    // Retrieve all banks when the component mounts
+    retriveAllBanks()
+      .then((response) => setBanks(response.data))
+      .catch((error) => console.log(error));
+  }, []);
+
+  function handleEditClick(id) {
+    retrieveBankApi(id)
+      .then((response) => {
+        setSelectedBank(response.data); // Set the selected bank
+        setOpen(true); // Open the dialog
+      })
+      .catch((error) => console.log(error));
   }
 
-  const handleClickOpen = () => {
+  function onSubmit(values) {
+    if (selectedBank) {
+      // If selectedBank exists, it means you're updating an existing bank record
+      updateBankApi(selectedBank.id, values)
+        .then((response) => {
+          // Handle the success response here (e.g., show a success message)
+          console.log("Bank updated successfully:", response.data);
+
+          // Optionally, you can refresh the list of banks after updating
+          refreshBanks();
+
+          // Close the dialog
+          handleClose();
+        })
+        .catch((error) => {
+          // Handle the error (e.g., show an error message)
+          console.error("Error updating bank:", error);
+        });
+    } else {
+      createBankApi(values)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => console.log(error));
+      refreshBanks();
+
+      // Close the dialog
+      handleClose();
+    }
+  }
+
+  function handleClickOpen() {
+    setSelectedBank(null);
     setOpen(true);
-  };
+  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -86,15 +134,14 @@ const Bank = () => {
       field: "checkIfActive",
       headerName: "Status",
       flex: 1,
+      valueGetter: (params) =>
+        params.row.checkIfActive ? "Active" : "Inactive",
     },
     {
       field: "action",
       headerName: "Action",
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          onClick={() => updateBank(params.id)} // You can define your own edit button click handler here
-        >
+        <Button variant="contained" onClick={() => handleEditClick(params.id)}>
           <EditCalendarOutlinedIcon />
         </Button>
       ),
@@ -110,7 +157,9 @@ const Bank = () => {
         </Button>
 
         <Dialog onClose={handleClose} open={open} fullWidth>
-          <DialogTitle id="cashbook-form-dialog">Add/Update Record</DialogTitle>
+          <DialogTitle id="cashbook-form-dialog">
+            {selectedBank ? "Update Record" : "Add Record"}
+          </DialogTitle>
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -125,9 +174,9 @@ const Bank = () => {
           </IconButton>
           <DialogContent>
             <Formik
-              // onSubmit={handleFormSubmit}
-              initialValues={initialValues}
-              // validationSchema={userSchema}
+              initialValues={selectedBank || initialValues}
+              validationSchema={bankSchema}
+              onSubmit={onSubmit}
             >
               {({
                 values,
@@ -137,7 +186,7 @@ const Bank = () => {
                 handleChange,
                 handleSubmit,
               }) => (
-                <form onSubmit={handleSubmit}>
+                <form>
                   <Box
                     display="grid"
                     gap="30px"
@@ -192,37 +241,45 @@ const Bank = () => {
                       <FormControlLabel
                         control={<Checkbox defaultChecked />}
                         label="Check If Active"
+                        value={values.active}
+                        checked={values.active}
+                        onChange={handleChange}
                       />
                     </FormGroup>
                   </Box>
+
+                  <DialogActions>
+                    <Button
+                      variant="contained"
+                      startIcon={<PublishOutlinedIcon />}
+                      autoFocus
+                      type="submit"
+                      onClick={handleSubmit}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<BlockOutlinedIcon />}
+                      autoFocus
+                      onClick={handleClose}
+                    >
+                      Close
+                    </Button>
+                  </DialogActions>
                 </form>
               )}
             </Formik>
           </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              startIcon={<PublishOutlinedIcon />}
-              autoFocus
-              // onClick={handleFormSubmit}
-            >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<BlockOutlinedIcon />}
-              autoFocus
-              onClick={handleClose}
-            >
-              Close
-            </Button>
-          </DialogActions>
         </Dialog>
       </Box>
       <Box
         m="10px 0 0 0"
         height="70vh"
         sx={{
+          "& .MuiDataGrid-toolbarContainer": {
+            backgroundColor: colors.blueAccent[300],
+          },
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -248,7 +305,16 @@ const Bank = () => {
           },
         }}
       >
-        <DataGrid rows={banks} columns={columns} />
+        <DataGrid
+          rows={banks}
+          columns={columns}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
+        />
       </Box>
     </Box>
   );

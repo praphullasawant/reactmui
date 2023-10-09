@@ -27,8 +27,12 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { retrieveBanks, retrieveCashbook } from "../../../../api/CashbookApiService";
+import {
+  retrieveBanks,
+  retrieveCashbook,
+} from "../../../../api/CashbookApiService";
 
 const initialValues = {
   receiptBookCode: "",
@@ -60,15 +64,17 @@ const Cashbook = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
+  const [selectedCashbook, setSelectedCashbook] = useState([]);
+
   const handleFormSubmit = (values) => {
     console.log("called");
     retrieveBanks()
       .then((response) => successfulResponse(response))
       .catch((error) => errorResponse(error))
-      .finally(() => console.log('cleanup'))
+      .finally(() => console.log("cleanup"));
   };
 
-  function updateCashbook(){}
+  function updateCashbook() {}
 
   function successfulResponse(response) {
     console.log(response);
@@ -109,7 +115,7 @@ const Cashbook = () => {
       renderCell: (params) => (
         <Button
           variant="contained"
-          onClick={() => updateCashbook(params.id)} // You can define your own edit button click handler here
+          onClick={() => updateCashbook(params.id)} 
         >
           <EditCalendarOutlinedIcon />
         </Button>
@@ -142,7 +148,8 @@ const Cashbook = () => {
           <DialogContent>
             <Formik
               onSubmit={handleFormSubmit}
-              initialValues={initialValues}
+              initialValues={selectedCashbook || initialValues}
+
               validationSchema={userSchema}
             >
               {({
