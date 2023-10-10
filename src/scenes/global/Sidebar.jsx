@@ -265,7 +265,7 @@ const Sidebar = () => {
                   />
                   <Item
                     title="Bank Account"
-                    to="/"
+                    to="/bankaccount"
                     selected={selected}
                     setSelected={setSelected}
                   />

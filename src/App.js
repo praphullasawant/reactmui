@@ -6,7 +6,7 @@ import Dashboard from "./scenes/dashboard"
 import Sidebar from "./scenes/global/Sidebar"
 import Cashbook from "./pages/academic/preadmission/course/Cashbook";
 import Bank from "./pages/academic/master/bankDetails/Bank";
-
+import BankAccount from "./pages/academic/master/bankDetails/BankAccount";
 function App() {
   const [theme, colorMode] = useMode(); 
   return (
@@ -21,6 +21,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/cashbook" element={<Cashbook />} />
             <Route path="/bank" element={<Bank />} />
+            <Route path="/bankaccount" element={<BankAccount/>} />
             </Routes>
           </main>
         </div>

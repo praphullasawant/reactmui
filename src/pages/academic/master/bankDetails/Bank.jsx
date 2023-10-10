@@ -200,7 +200,6 @@ const Bank = () => {
                     <TextField
                       fullWidth
                       variant="filled"
-                      type="text"
                       label="Bank Code"
                       size="small"
                       onBlur={handleBlur}

@@ -14,9 +14,8 @@ import {
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../../theme";
-import { mockDataCashbook } from "../../../../data/mockData";
 import Header from "../../../../components/Header";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -27,12 +26,16 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {
   retrieveBanks,
   retrieveCashbook,
 } from "../../../../api/CashbookApiService";
+import {
+  retriveAllBanks,
+  retrieveAccountForBank,
+} from "../../../../api/BankApiService";
 
 const initialValues = {
   receiptBookCode: "",
@@ -63,26 +66,17 @@ const Cashbook = () => {
   const [open, setOpen] = React.useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-
+  const [selectedBank, setSelectedBank] = useState(initialValues.bankName);
+  const [accountNumbers, setAccountNumbers] = useState([]);
+  const [cashbooks, setCashbooks] = useState([]);
+  const [banks, setBanks] = useState([]);
   const [selectedCashbook, setSelectedCashbook] = useState([]);
 
-  const handleFormSubmit = (values) => {
-    console.log("called");
-    retrieveBanks()
-      .then((response) => successfulResponse(response))
-      .catch((error) => errorResponse(error))
-      .finally(() => console.log("cleanup"));
-  };
-
-  function updateCashbook() {}
-
-  function successfulResponse(response) {
-    console.log(response);
+  function handleEditClick() {
+    setOpen(true);
   }
 
-  function errorResponse(error) {
-    console.log(error);
-  }
+  function handleFormSubmit() {}
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -91,13 +85,31 @@ const Cashbook = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    // Retrieve all banks when the component mounts
+    retriveAllBanks()
+      .then((response) => setBanks(response.data))
+      .catch((error) => console.log(error));
+  }, []);
+
+  useEffect(() => {
+    if (selectedBank) {
+      // Check if there's a selected bank
+      retrieveAccountForBank(selectedBank) // Pass the selected bank to the function
+        .then((response) => {
+          // Update the fetched account numbers in the state
+          setAccountNumbers(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [selectedBank]);
+
   const columns = [
     { field: "id", headerName: "ID" },
     {
       field: "receiptBookCode",
       headerName: "Receipt Book Code",
       flex: 1,
-      cellClassName: "name-column--cell",
     },
     {
       field: "receiptBookName",
@@ -113,10 +125,7 @@ const Cashbook = () => {
       field: "action",
       headerName: "Action",
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          onClick={() => updateCashbook(params.id)} 
-        >
+        <Button variant="contained" onClick={() => handleEditClick(params.id)}>
           <EditCalendarOutlinedIcon />
         </Button>
       ),
@@ -132,7 +141,9 @@ const Cashbook = () => {
         </Button>
 
         <Dialog onClose={handleClose} open={open} fullWidth>
-          <DialogTitle id="cashbook-form-dialog">Add/Update Record</DialogTitle>
+          <DialogTitle id="cashbook-form-dialog">
+            {selectedCashbook ? "Update Record" : "Add Record"}
+          </DialogTitle>
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -147,10 +158,8 @@ const Cashbook = () => {
           </IconButton>
           <DialogContent>
             <Formik
-              onSubmit={handleFormSubmit}
               initialValues={selectedCashbook || initialValues}
-
-              validationSchema={userSchema}
+              onSubmit={handleFormSubmit}
             >
               {({
                 values,
@@ -160,7 +169,7 @@ const Cashbook = () => {
                 handleChange,
                 handleSubmit,
               }) => (
-                <form onSubmit={handleSubmit}>
+                <form>
                   <Box
                     display="grid"
                     gap="30px"
@@ -281,8 +290,8 @@ const Cashbook = () => {
                         name="receiptBookType"
                       >
                         <MenuItem value="admission">Admission</MenuItem>
-                        <MenuItem value="admission">Other Fees</MenuItem>
-                        <MenuItem value="admission">Examination</MenuItem>
+                        <MenuItem value="otherFees">Other Fees</MenuItem>
+                        <MenuItem value="Examination">Examination</MenuItem>
                       </Select>
                     </FormControl>
                     <FormControl
@@ -294,13 +303,18 @@ const Cashbook = () => {
                       <InputLabel>Bank Name</InputLabel>
                       <Select
                         onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.bankName}
+                        value={selectedBank}
                         name="bankName"
+                        onChange={(e) => {
+                          setSelectedBank(e.target.value); // Update selectedBank with the selected bank name
+                          handleChange(e);
+                        }}
                       >
-                        <MenuItem value="admission">CBI</MenuItem>
-                        <MenuItem value="admission">SBI</MenuItem>
-                        <MenuItem value="admission">BOM</MenuItem>
+                        {banks.map((bank) => (
+                          <MenuItem key={bank.id} value={bank.id}>
+                            {bank.bankName}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                     <FormControl
@@ -316,9 +330,14 @@ const Cashbook = () => {
                         value={values.bankAcNumber}
                         name="bankAcNumber"
                       >
-                        <MenuItem value="admission">12345</MenuItem>
-                        <MenuItem value="admission">67890</MenuItem>
-                        <MenuItem value="admission">654537</MenuItem>
+                        {accountNumbers.map((accountNumber) => (
+                          <MenuItem
+                            key={accountNumber.id}
+                            value={accountNumber.accountNumber}
+                          >
+                            {accountNumber.accountNumber}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                     <TextField
@@ -358,34 +377,37 @@ const Cashbook = () => {
                       />
                     </FormGroup>
                   </Box>
+                  <DialogActions>
+                    <Button
+                      variant="contained"
+                      startIcon={<PublishOutlinedIcon />}
+                      autoFocus
+                      onClick={handleFormSubmit}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<BlockOutlinedIcon />}
+                      autoFocus
+                      onClick={handleClose}
+                    >
+                      Close
+                    </Button>
+                  </DialogActions>
                 </form>
               )}
             </Formik>
           </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              startIcon={<PublishOutlinedIcon />}
-              autoFocus
-              onClick={handleFormSubmit}
-            >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<BlockOutlinedIcon />}
-              autoFocus
-              onClick={handleClose}
-            >
-              Close
-            </Button>
-          </DialogActions>
         </Dialog>
       </Box>
       <Box
         m="10px 0 0 0"
         height="70vh"
         sx={{
+          "& .MuiDataGrid-toolbarContainer": {
+            backgroundColor: colors.blueAccent[300],
+          },
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -411,7 +433,16 @@ const Cashbook = () => {
           },
         }}
       >
-        <DataGrid rows={mockDataCashbook} columns={columns} />
+        <DataGrid
+          rows={cashbooks}
+          columns={columns}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
+        />
       </Box>
     </Box>
   );

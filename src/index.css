@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300&display=swap');
+@import url("https://use.typekit.net/wsz7skn.css");
 
 html,
 body,
@@ -7,7 +7,7 @@ body,
 .content {
   height:100%;
   width : 100%;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'proxima-nova', sans-serif;
   overflow: hidden;
 }
 
