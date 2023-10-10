@@ -291,6 +291,12 @@ const Bank = () => {
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],
             borderBottom: "none",
+            
+          },
+          "& .MuiDataGrid-columnHeaderTitle":{
+            // fontWeight:"bold",
+            textTransform: "uppercase",
+            fontSize:"1vw"
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
