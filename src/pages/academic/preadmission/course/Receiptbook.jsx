@@ -29,8 +29,10 @@ import * as yup from "yup";
 import { useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {
-  retrieveBanks,
+  retrieveAllCashbook,
+  createCashbook,
   retrieveCashbook,
+  updateCashbook,
 } from "../../../../api/CashbookApiService";
 import {
   retriveAllBanks,
@@ -50,37 +52,85 @@ const initialValues = {
   bankAcNumber: "",
   srNo: "",
   tcNo: "",
-  gstApplicable: false,
-  active: true,
+  checkIfGstApplicable: false,
+  checkIfActive: true,
 };
 
-const userSchema = yup.object().shape({
+const cashbookSchema = yup.object().shape({
   receiptBookCode: yup.string().required("required"),
   receiptBookName: yup.string().required("required"),
   receiptBookType: yup.string().required("required"),
 });
 
-const Cashbook = () => {
+const Receiptbook = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = React.useState(false);
-
+  const [selectedBankId, setSelectedBankId] = useState("");
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [selectedBank, setSelectedBank] = useState(initialValues.bankName);
+  const [selectedBankName, setSelectedBankName] = useState(
+    initialValues.bankName
+  );
+
   const [accountNumbers, setAccountNumbers] = useState([]);
   const [cashbooks, setCashbooks] = useState([]);
   const [banks, setBanks] = useState([]);
   const [selectedCashbook, setSelectedCashbook] = useState([]);
+  useEffect(() => refreshCashbook(), []);
 
-  function handleEditClick() {
-    setOpen(true);
+  function refreshCashbook() {
+    retrieveAllCashbook()
+      .then((response) => setCashbooks(response.data))
+      .catch((error) => console.log(error));
   }
 
-  function handleFormSubmit() {}
+  useEffect(() => {
+    retrieveAllCashbook()
+      .then((response) => setCashbooks(response.data))
+      .catch((error) => console.log(error));
+  }, []);
+
+  function handleEditClick(id) {
+    retrieveCashbook(id)
+      .then((response) => {
+        setSelectedCashbook(response.data);
+        setOpen(true);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function onSubmit(values) {
+    if (selectedCashbook) {
+      updateCashbook(selectedCashbook.id, values)
+        .then((response) => {
+          console.log("Cashbook updated successfully:", response.data);
+
+          refreshCashbook();
+
+          handleClose();
+        })
+        .catch((error) => {
+          console.error("Error updating Cashbook:", error);
+        });
+    } else {
+      values.bankName = selectedBankName;
+      createCashbook(values)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => console.log(error));
+      refreshCashbook();
+
+      handleClose();
+    }
+  }
 
   const handleClickOpen = () => {
+    setSelectedCashbook(null);
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -135,8 +185,8 @@ const Cashbook = () => {
   return (
     <Box>
       <Header title="Receipt Book" />
-      <Box display="flex" alignItems="center" justifyContent="center">
-        <Button variant="contained" onClick={handleClickOpen}>
+      <Box display="flex" alignItems="center" justifyContent="center" >
+        <Button variant="contained" onClick={handleClickOpen} sx={{mt:"7vh"}}>
           Add New Record
         </Button>
 
@@ -159,7 +209,8 @@ const Cashbook = () => {
           <DialogContent>
             <Formik
               initialValues={selectedCashbook || initialValues}
-              onSubmit={handleFormSubmit}
+              validationSchema={cashbookSchema}
+              onSubmit={onSubmit}
             >
               {({
                 values,
@@ -303,15 +354,22 @@ const Cashbook = () => {
                       <InputLabel>Bank Name</InputLabel>
                       <Select
                         onBlur={handleBlur}
-                        value={selectedBank}
                         name="bankName"
+                        value={values.bankName}
                         onChange={(e) => {
-                          setSelectedBank(e.target.value); // Update selectedBank with the selected bank name
+                          setSelectedBank(e.target.value);
                           handleChange(e);
                         }}
                       >
                         {banks.map((bank) => (
-                          <MenuItem key={bank.id} value={bank.id}>
+                          <MenuItem
+                            key={bank.id}
+                            value={bank.id}
+                            onClick={() => {
+                              setSelectedBankId(bank.id);
+                              setSelectedBankName(bank.bankName);
+                            }}
+                          >
                             {bank.bankName}
                           </MenuItem>
                         ))}
@@ -382,9 +440,9 @@ const Cashbook = () => {
                       variant="contained"
                       startIcon={<PublishOutlinedIcon />}
                       autoFocus
-                      onClick={handleFormSubmit}
+                      onClick={handleSubmit}
                     >
-                      Submit
+                      {selectedCashbook ? "Update" : "Submit"}
                     </Button>
                     <Button
                       variant="contained"
@@ -402,7 +460,7 @@ const Cashbook = () => {
         </Dialog>
       </Box>
       <Box
-        m="10px 0 0 0"
+        m="20px 20px 20px 20px"
         height="70vh"
         sx={{
           "& .MuiDataGrid-toolbarContainer": {
@@ -421,10 +479,10 @@ const Cashbook = () => {
             backgroundColor: colors.blueAccent[700],
             borderBottom: "none",
           },
-          "& .MuiDataGrid-columnHeaderTitle":{
+          "& .MuiDataGrid-columnHeaderTitle": {
             // fontWeight:"bold",
             textTransform: "uppercase",
-            fontSize:"1vw"
+            fontSize: "1vw",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
@@ -439,6 +497,8 @@ const Cashbook = () => {
         }}
       >
         <DataGrid
+          disableDensitySelector
+          disableColumnFilter
           rows={cashbooks}
           columns={columns}
           slots={{ toolbar: GridToolbar }}
@@ -453,4 +513,4 @@ const Cashbook = () => {
   );
 };
 
-export default Cashbook;
+export default Receiptbook;

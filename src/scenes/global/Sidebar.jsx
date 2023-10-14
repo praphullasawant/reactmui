@@ -146,7 +146,7 @@ const Sidebar = () => {
                 <SubMenu title="Academic Data">
                   <Item
                     title="Academic Session"
-                    to="/"
+                    to="/academicsession"
                     selected={selected}
                     setSelected={setSelected}
                   />
@@ -311,26 +311,26 @@ const Sidebar = () => {
                     setSelected={setSelected}
                   />
                   <Item
-                    title="Cashbook"
-                    to="/cashbook"
+                    title="Receipt Book"
+                    to="/receiptbook"
                     selected={selected}
                     setSelected={setSelected}
                   />
                   <Item
                     title="Feehead"
-                    to="/"
+                    to="/feehead"
                     selected={selected}
                     setSelected={setSelected}
                   />
                   <Item
-                    title="Feehead Grouping"
-                    to="/"
+                    title="Feehead Groups"
+                    to="/feeheadgroups"
                     selected={selected}
                     setSelected={setSelected}
                   />
                   <Item
-                    title="Feehead Account Mapping"
-                    to="/"
+                    title="Feehead Account Link"
+                    to="/feeheadaccountlink"
                     selected={selected}
                     setSelected={setSelected}
                   />

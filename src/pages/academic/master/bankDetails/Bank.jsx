@@ -294,9 +294,9 @@ const Bank = () => {
             
           },
           "& .MuiDataGrid-columnHeaderTitle":{
-            // fontWeight:"bold",
+            fontWeight:"bold",
             textTransform: "uppercase",
-            fontSize:"1vw"
+            fontSize:"1.2vw"
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],

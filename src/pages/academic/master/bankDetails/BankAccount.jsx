@@ -43,13 +43,16 @@ const BankAccount = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedBankId, setSelectedBankId] = useState("");
   const [selectedBank, setSelectedBank] = useState(initialValues.bankName);
-  const [selectedBankName, setSelectedBankName] = useState(initialValues.bankName);
+  const [selectedBankName, setSelectedBankName] = useState(
+    initialValues.bankName
+  );
 
   const [bankAccountData, setBankAccountData] = useState([]);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const [banks, setBanks] = useState([]);
+  console.log(banks)
   function handleEditClick() {}
 
   useEffect(() => refreshBanks(), []);
@@ -80,13 +83,13 @@ const BankAccount = () => {
   const handleSubmit = (values, { setSubmitting }) => {
     // Update the bankName value in the values object with the selectedBankName
     values.bankName = selectedBankName;
-  
+
     // Call the createBankAccountforBank function with the updated values
     createBankAccountforBank(selectedBankId, values)
       .then((response) => {
         // Handle success, maybe show a success message or refresh the data
         console.log("Bank account created successfully", response);
-  
+
         // You can also refresh the bank account data if needed
         retrieveAccountForBank(selectedBankId)
           .then((response) => setBankAccountData(response.data))
@@ -102,7 +105,6 @@ const BankAccount = () => {
         setOpen(false);
       });
   };
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -151,12 +153,13 @@ const BankAccount = () => {
           }) => (
             <form>
               <Box
-                display="grid"
-                gap="30px"
-                gridTemplateColumns="repeat(4, minmax(0,1fr))"
+                display="flex"
+                flexWrap="wrap"
+                gap={2}
                 sx={{
                   "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4",
+                    flexBasis: "50%",
+                    flexGrow: 1,
                   },
                 }}
               >
@@ -173,15 +176,19 @@ const BankAccount = () => {
                     handleChange(e);
                   }}
                   onBlur={handleBlur} // Bind the blur event to Formik's handleBlu
-                  sx={{ gridColumn: "span 4", width: "100%" }}
+                  sx={{ gridColumn: "span 2", width: "100%" }}
                 >
                   {banks.map((bank) => (
-                    <MenuItem key={bank.id} value={bank.id} onClick={() => {
-                      setSelectedBankId(bank.id);
-                      setSelectedBankName(bank.bankName);
-                  }}>
-                    {bank.bankName}
-                  </MenuItem>
+                    <MenuItem
+                      key={bank.id}
+                      value={bank.id}
+                      onClick={() => {
+                        setSelectedBankId(bank.id);
+                        setSelectedBankName(bank.bankName);
+                      }}
+                    >
+                      {bank.bankName}
+                    </MenuItem>
                   ))}
                 </TextField>
                 <TextField
@@ -195,11 +202,11 @@ const BankAccount = () => {
                   name="accountNumber"
                   error={!!touched.accountNumber && !!errors.accountNumber}
                   helperText={touched.accountNumber && errors.accountNumber}
-                  sx={{ gridColumn: "span 4" }}
+                  sx={{ gridColumn: "span 2" }}
                 />
-                <FormGroup sx={{ gridColumn: "span 4" }}>
+                <FormGroup >
                   <FormControlLabel
-                    control={<Checkbox/>}
+                    control={<Checkbox />}
                     label="Check If Active"
                     name="checkIfActive" // Updated field name
                     value={values.checkIfActive} // Updated field name
@@ -208,11 +215,10 @@ const BankAccount = () => {
                   />
                 </FormGroup>
                 <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "auto auto", // Adjust column layout
-                    justifyContent: "flex-end", // Add some spacing between buttons
-                  }}
+                  display="flex"
+                  justifyContent="flex-end"
+                  width="100%"
+                  mt={2}
                 >
                   <Button
                     variant="contained"
@@ -239,7 +245,7 @@ const BankAccount = () => {
       </Box>
       <Box
         m="10px 100px 0 100px"
-        height="40vh"
+        height="55vh"
         sx={{
           "& .MuiDataGrid-toolbarContainer": {
             backgroundColor: colors.blueAccent[300],
@@ -257,10 +263,10 @@ const BankAccount = () => {
             backgroundColor: colors.blueAccent[700],
             borderBottom: "none",
           },
-          "& .MuiDataGrid-columnHeaderTitle":{
+          "& .MuiDataGrid-columnHeaderTitle": {
             // fontWeight:"bold",
             textTransform: "uppercase",
-            fontSize:"1vw"
+            fontSize: "1vw",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],

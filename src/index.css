@@ -1,4 +1,4 @@
-@import url("https://use.typekit.net/wsz7skn.css");
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;1,300&family=Source+Sans+3:wght@300&display=swap');
 
 html,
 body,
@@ -7,8 +7,8 @@ body,
 .content {
   height:100%;
   width : 100%;
-  font-family: 'proxima-nova', sans-serif;
-  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  overflow: auto;
 }
 
 .app{
